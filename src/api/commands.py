@@ -20,6 +20,8 @@ def setup_commands(app):
         print("Creating test users")
         for x in range(1, int(count) + 1):
             user = User()
+            user.first_name = f"First{x}"
+            user.last_name = f"Last{x}"
             user.email = "test_user" + str(x) + "@test.com"
             user.password = "123456"
             user.is_active = True
