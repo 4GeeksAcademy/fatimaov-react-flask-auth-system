@@ -23,13 +23,23 @@ def login():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")
-    # If email or password is missing, return a 400 response
-    if not email or not email.strip() or not password or not password.strip():
-        return jsonify(response = "Email and password are required"), 400
-
+    # Validate that all fields are strings
+    if not all([
+        isinstance(email, str),
+        isinstance(password, str)
+    ]):
+        return jsonify(response="All fields must be text values"), 400
+    
     # Normalize email and password by trimming surrounding whitespace
     email = email.strip()
     password = password.strip()
+    # If email or password is missing, return a 400 response
+    if not all([
+        email,
+        password
+    ]):
+        return jsonify(response = "Email and password are required"), 400
+
     # Check whether the user exists in the database
     user_exists = db.session.execute(select(User).where(User.email == email)).scalar_one_or_none()
     # If the user does not exist, return a 401 response
@@ -39,7 +49,7 @@ def login():
     # If the user exists, verify the password
     user_password = user_exists.password
     # If the password is incorrect, return a 401 response
-    if user_password != password:
+    if not check_password_hash(user_password, password):
         return jsonify(response = "Incorrect email or password"), 401
     
     # If the credentials are valid, generate the access token
