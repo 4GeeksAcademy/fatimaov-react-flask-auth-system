@@ -1,6 +1,7 @@
 
 import click
 from api.models import db, User
+from werkzeug.security import generate_password_hash
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -23,7 +24,7 @@ def setup_commands(app):
             user.first_name = f"First{x}"
             user.last_name = f"Last{x}"
             user.email = "test_user" + str(x) + "@test.com"
-            user.password = "123456"
+            user.password = generate_password_hash("123456")
             user.is_active = True
             db.session.add(user)
             db.session.commit()
