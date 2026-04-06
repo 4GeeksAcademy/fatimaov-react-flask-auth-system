@@ -14,29 +14,34 @@ export const Private = () => {
 
     useEffect(() => {
         async function getUserData() {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                window.alert("Your session was not found. Please log in.")
-                navigate("/")
-                return;
-            }
-            const response = await fetch(`${backendUrl}/api/private`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    window.alert("Your session was not found. Please log in.")
+                    navigate("/")
+                    return;
                 }
-            })
-            if (!response.ok) {
-                window.alert("Your session has expired or is no longer valid. Please log in again.")
+                const response = await fetch(`${backendUrl}/api/private`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                })
+                if (!response.ok) {
+                    window.alert("Your session has expired or is no longer valid. Please log in again.")
+                    navigate("/")
+                    return;
+                }
+                const responseJS = await response.json()
+                dispatch({
+                    type: "ADD_DATA",
+                    payload: responseJS
+                })
+            } catch (error) {
+                window.alert("Unable to reach the server. Please try again.")
                 navigate("/")
-                return;
             }
-            const responseJS = await response.json()
-            dispatch({
-                type: "ADD_DATA",
-                payload: responseJS
-            })
         }
         getUserData();
     }, [])
