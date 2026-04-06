@@ -4,12 +4,16 @@ import LoginForm from "../components/LoginForm.jsx";
 export const Login = () => {
 
 	return (
-		<div className="text-center mt-5">
-			<h1>Login page</h1>
+		<div className="text-center mt-5 m-auto" style={{ maxWidth: 500 }} >
+			<h1 className="display-2 my-5">Login page</h1>
 			<LoginForm />
-			<Link to="/signup">
-				<button className="btn btn-primary">Sign up</button>
-			</Link>
+			<div class="alert alert-dark border-dark" role="alert">
+				<p>Don't have an account yet? Click Sign up to create one.</p>
+				<Link to="/signup">
+					<button className="btn btn-warning">Sign up</button>
+				</Link>
+
+			</div>
 		</div>
 	);
 }; 

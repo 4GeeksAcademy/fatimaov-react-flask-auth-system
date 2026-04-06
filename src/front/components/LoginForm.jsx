@@ -53,21 +53,21 @@ function LoginForm() {
 
     return (
         <>
-            <form onSubmit={handleSubmit} style={{ maxWidth: 500 }} className="m-auto text-start my-5">
+            <form onSubmit={handleSubmit} className="m-auto text-start my-5 d-flex flex-column">
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email address</label>
-                    <input onChange={(e) => setUserEmail(e.target.value)} value={userEmail} type="email" className="form-control" id="email" aria-describedby="emailHelp" required />
+                    <input onChange={(e) => setUserEmail(e.target.value)} value={userEmail} type="email" className="form-control" id="email" aria-describedby="emailHelp" required placeholder="youremail@email.com"/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
-                    <input onChange={(e) => setUserPassword(e.target.value)} value={userPassword} type="password" className="form-control" id="password" required />
+                    <input onChange={(e) => setUserPassword(e.target.value)} value={userPassword} type="password" className="form-control" id="password" required/>
                 </div>
                 {alert && (
                     <div className="alert alert-danger" role="alert">
                         {alert}
                     </div>
                 )}
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-success">Submit</button>
             </form>
         </>
     );
