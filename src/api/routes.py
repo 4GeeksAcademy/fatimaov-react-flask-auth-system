@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from sqlalchemy import select
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -53,7 +53,7 @@ def login():
         return jsonify(response = "Incorrect email or password"), 401
     
     # If the credentials are valid, generate the access token
-    access_token = create_access_token(identity=user_exists.id)
+    access_token = create_access_token(identity=str(user_exists.id))
     # Return a 200 OK response with the token
     return jsonify(access_token=access_token), 200
 
@@ -105,3 +105,13 @@ def signup():
     # Return a 200 response with a success message
     return jsonify(response="Account created successfully"), 200
 
+
+@api.route("/private", methods=["GET"])
+@jwt_required()
+def private():
+    # Read the user identity from the validated JWT and convert it to the expected database type
+    user_id = int(get_jwt_identity())
+    # Look up the user in the database using the token identity
+    user_exists = db.get_or_404(User, user_id, description = "User not found")
+    # Return the protected user data to the frontend
+    return user_exists.serialize(), 200
