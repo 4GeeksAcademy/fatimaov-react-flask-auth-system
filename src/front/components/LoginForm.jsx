@@ -1,28 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 function LoginForm() {
 
-    const [userEmail, setUserEmail] = useState("")
-    const [userPassword, setUserPassword] = useState("")
-    const [alert, setAlert] = useState(null)
-    const navigate = useNavigate()
+    const [userEmail, setUserEmail] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+    const [alert, setAlert] = useState(null);
+    const navigate = useNavigate();
 
     function handleSubmit(e) {
-        e.preventDefault()
-        setAlert(null)
-        const trimmedPassword = userPassword.trim()
-        if (!trimmedPassword) {
-            setUserPassword(trimmedPassword)
-            setAlert("Please enter a password")
+        e.preventDefault();
+        setAlert(null);
+        const trimmedPassword = userPassword.trim();
+        const trimmedEmail = userEmail.trim();
+        if (!trimmedEmail || !trimmedPassword) {
+            setUserEmail(trimmedEmail);
+            setUserPassword(trimmedPassword);
+            setAlert("Email and password are required.");
             return;
         }
         const body = {
-            email: userEmail.trim(),
+            email: trimmedEmail,
             password: trimmedPassword
-        }
+        };
         // Send the login request to the backend
         async function loginRequest() {
             try {
@@ -32,21 +34,21 @@ function LoginForm() {
                     headers: {
                         "Content-Type": "application/json"
                     }
-                })
+                });
                 const responseJS = await response.json();
                 if (!response.ok) {
-                    setAlert(responseJS.response)
+                    setAlert(responseJS.response);
                     return;
                 }
                 // If the login succeeds, handle the token and redirect the user
-                localStorage.setItem("token", responseJS.access_token)
-                navigate("/private")
+                localStorage.setItem("token", responseJS.access_token);
+                navigate("/private");
 
             } catch (error) {
-                setAlert("Unable to reach the server. Please try again")
+                setAlert("Unable to reach the server. Please try again.");
             }
         }
-        loginRequest()
+        loginRequest();
     }
 
     return (
@@ -68,7 +70,7 @@ function LoginForm() {
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>
         </>
-    )
+    );
 };
 
 export default LoginForm;
