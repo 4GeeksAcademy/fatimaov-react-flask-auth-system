@@ -10,6 +10,12 @@ export default function storeReducer(store, action = {}) {
       return {
         userData: action.payload
       };
+    
+    case "RESET_DATA":
+      return {
+        userData: null
+      };
+      
     default:
       throw Error('Unknown action.');
   }    
