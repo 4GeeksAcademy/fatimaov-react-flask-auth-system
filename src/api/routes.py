@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token
 from sqlalchemy import select
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
 
@@ -45,3 +46,52 @@ def login():
     access_token = create_access_token(identity=user_exists.id)
     # Return a 200 OK response with the token
     return jsonify(access_token=access_token), 200
+
+
+@api.route("/signup", methods=["POST"])
+def signup():
+    # Parse signup data from the request body
+    data = request.get_json(silent=True) or {}
+    # Read first_name, last_name, email, and password from the payload
+    first_name = data.get("first_name")
+    last_name = data.get("last_name")
+    email = data.get("email")
+    password = data.get("password")
+    # Validate that all fields are strings
+    if not all([
+        isinstance(first_name, str),
+        isinstance(last_name, str),
+        isinstance(email, str),
+        isinstance(password, str)
+    ]):
+        return jsonify(response="All fields must be text values"), 400
+    
+    # Normalize the fields by trimming surrounding whitespace
+    first_name = first_name.strip()
+    last_name = last_name.strip()
+    email = email.strip()
+    password = password.strip()
+    # Validate that all required fields are present
+    if not all([
+        first_name,
+        last_name,
+        email,
+        password
+    ]):
+        return jsonify(response="First name, last name, email, and password are required"), 400
+    
+    # Check whether the email is already registered
+    email_exists = db.session.execute(select(User).where(User.email == email)).scalar_one_or_none()
+    if email_exists is not None:
+        return jsonify(response="Unable to create account with the provided information"), 400
+
+    # Generate password hash
+    hashed_password = generate_password_hash(password)
+    # Create a new User instance with the validated data
+    user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, is_active=True)
+    # Save the new user to the database
+    db.session.add(user)
+    db.session.commit()
+    # Return a 200 response with a success message
+    return jsonify(response="Account created successfully"), 200
+
