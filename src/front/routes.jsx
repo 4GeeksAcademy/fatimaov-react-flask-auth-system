@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
+import { Private } from "./pages/Private";
+import { UserProfile } from "./components/UserProfile";
 
 
 export const router = createBrowserRouter(
@@ -21,6 +23,9 @@ export const router = createBrowserRouter(
     <>
       <Route path="/" element={<Login />} errorElement={<h1>Not found!</h1>} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/private" element={<Private />}>
+        <Route index element={<UserProfile />} />
+      </Route>
     </>
 
   )
