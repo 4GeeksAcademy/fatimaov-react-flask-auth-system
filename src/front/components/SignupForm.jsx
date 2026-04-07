@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -28,7 +29,7 @@ export const SignupForm = () => {
             setAlert("First name, last name, email, and password are required");
             return;
         }
-        
+
         const body = {
             first_name: trimmedFirstName,
             last_name: trimmedLastName,
@@ -85,7 +86,12 @@ export const SignupForm = () => {
                         {alert}
                     </div>
                 )}
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <div className="d-flex justify-content-end mt-4">
+                    <Link to={"/login"}>
+                        <button className="btn btn-secondary me-2">Go Back</button>
+                    </Link>
+                    <button type="submit" className="btn btn-warning">Submit</button>
+                </div>
             </form>
         </>
     )
