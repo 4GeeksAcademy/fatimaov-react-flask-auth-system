@@ -1,9 +1,10 @@
-export const Footer= () => {
+export const Footer = () => {
 
 	return (
-		<div className="text-center mt-5">
-			<h1>Footer</h1>
-			
-		</div>
+		<footer className="bg-dark border-top border-secondary-subtle mt-5 py-3">
+			<div className="container text-center">
+				<p className="text-secondary small mb-1">Protected content for authenticated users.</p>
+			</div>
+		</footer>
 	);
 }; 
