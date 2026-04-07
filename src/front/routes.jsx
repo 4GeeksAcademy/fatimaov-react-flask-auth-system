@@ -3,6 +3,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
 } from "react-router-dom";
 import { Login } from "./pages/Login";
@@ -21,9 +22,10 @@ export const router = createBrowserRouter(
 
     // Root Route: All navigation will start from here.
     <>
-      <Route path="/" element={<Login />} errorElement={<h1>Not found!</h1>} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/private" element={<Private />}>
+      <Route path="/" element={<Navigate to={"/login"} replace/>} errorElement={<h1>Not found!</h1>} />
+      <Route path="/login" element={<Login />} errorElement={<h1>Not found!</h1>} />
+      <Route path="/signup" element={<Signup />} errorElement={<h1>Not found!</h1>}/>
+      <Route path="/private" element={<Private />} errorElement={<h1>Not found!</h1>}>
         <Route index element={<UserProfile />} />
       </Route>
     </>
